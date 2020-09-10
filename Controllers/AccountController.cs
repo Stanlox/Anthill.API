@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -108,7 +109,28 @@ namespace Anthill.API.Controllers
             return Ok();
         }
 
-       
+        [HttpPost("[action]")]
+        public async Task<IActionResult> ForgotPassword([Required] string email)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await userManager.FindByEmailAsync(email);
+                if (user == null || !(await userManager.IsEmailConfirmedAsync(user)))
+                {
+                    //return StatusCode(403);
+                }
+
+                var code = await userManager.GeneratePasswordResetTokenAsync(user);
+                var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
+                service.SendEmail(email, "Сброс пароля", $"Для сброса пароля пройдите по ссылке: <a href='{callbackUrl}'>link</a>");
+                return Ok();
+            }
+            else
+            {
+                return BadRequest(ModelState);
+            }
+        }
+
         public async Task<IActionResult> ConfirmEmail(string userId, string code, string password)
         {
             var user = await userManager.FindByIdAsync(userId);
