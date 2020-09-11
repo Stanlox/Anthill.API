@@ -18,7 +18,7 @@ namespace Anthill.API.Models
         {
         }
 
-        public DbSet<Projects> Projects { get; set; }
+        public DbSet<Project> Projects { get; set; }
         public DbSet<CategoryProjects> Categories { get; set; }
         public DbSet<Favourites> Favourites { get; set; }
 

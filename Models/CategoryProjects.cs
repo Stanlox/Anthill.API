@@ -9,7 +9,7 @@ namespace Anthill.API.Models
     {
         public int Id { get; set; }
         public string CategoryName { get; set; }
-        public List<Projects> Projects { get; set; }
+        public List<Project> Projects { get; set; }
 
     }
 }

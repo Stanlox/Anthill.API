@@ -4,7 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Anthill.API.DTO;
 using Anthill.API.Filters;
+using Anthill.API.Interfaces;
 using Anthill.API.Models;
+using Anthill.API.Repository;
 using Anthill.API.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
@@ -40,6 +42,8 @@ namespace Anthill.API
         {
             services.AddDbContext<ApplicationDbContent>(options => options.UseSqlServer(this.ConfigurationRoot.GetConnectionString("DefaultConnection")));
             services.AddControllers();
+            services.AddTransient<IProjectRepository, ProjectRepository>();
+            services.AddTransient<IProjectCategoryRepository, CategoryRepository>();
             services.AddTransient<EmailService>();
             services.AddCors();
 

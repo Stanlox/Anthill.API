@@ -11,10 +11,10 @@ namespace Anthill.API.DTO
         private static Dictionary<string, CategoryProjects> categoryDictionary = new Dictionary<string, CategoryProjects>();
         public static void Initial(ApplicationDbContent content)
         {
-            if (!content.CategoryName.Any())
-            {
-                content.CategoryName.AddRange(Categories.Select(x => x.Value));
-            }
+            //if (!content.CategoryName.Any())
+            //{
+            //    content.CategoryName.AddRange(Categories.Select(x => x.Value));
+            //}
         }
         public static Dictionary<string, CategoryProjects> Categories
         {
