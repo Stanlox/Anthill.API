@@ -11,7 +11,6 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 
 namespace Anthill.API.Controllers
@@ -37,7 +36,7 @@ namespace Anthill.API.Controllers
         }
 
         [HttpPost("[action]")]
-        [ValidateAntiForgeryToken]
+        
         public async Task<IActionResult> Login([FromBody] LoginViewModel details)
         {
             if (ModelState.IsValid)

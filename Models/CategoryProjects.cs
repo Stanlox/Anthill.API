@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Anthill.API.Models
 {
-    public class CategotyProjects
+    public class CategoryProjects
     {
         public int Id { get; set; }
         public string CategoryName { get; set; }

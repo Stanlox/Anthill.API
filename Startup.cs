@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Anthill.API.DTO;
 using Anthill.API.Filters;
 using Anthill.API.Models;
 using Anthill.API.Services;
@@ -89,6 +90,13 @@ namespace Anthill.API
                      name: "default",
                      pattern: "{controller}/{action=Index}/{id?}");
             });
+
+
+            using (var serviceScope = app.ApplicationServices.CreateScope())
+            {
+                ApplicationDbContent content = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContent>();
+                ProjectsDto.Initial(content);
+            }
         }
     }
 }

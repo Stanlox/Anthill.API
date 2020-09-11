@@ -13,6 +13,6 @@ namespace Anthill.API.Models
         public bool IsCompleted { get; set; }
         public string Description { get; set; }
         public int CategoryId { get; set; }
-        public virtual CategotyProjects Categoty { get; set; }
+        public virtual CategoryProjects Category { get; set; }
     }
 }

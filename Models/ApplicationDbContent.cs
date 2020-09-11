@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace Anthill.API.Models
 {
@@ -16,5 +17,10 @@ namespace Anthill.API.Models
             : base(options)
         {
         }
+
+        public DbSet<Projects> Projects { get; set; }
+        public DbSet<CategoryProjects> Categories { get; set; }
+        public DbSet<Favourites> Favourites { get; set; }
+
     }
 }
