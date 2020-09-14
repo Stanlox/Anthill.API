@@ -109,7 +109,7 @@ namespace Anthill.API.Controllers
         }
 
         [HttpPost("[action]")]
-        public async Task<IActionResult> ForgotPassword([Required] string email)
+        public async Task<IActionResult> ForgotPassword([FromBody] string email)
         {
             if (ModelState.IsValid)
             {

@@ -45,6 +45,7 @@ namespace Anthill.API
             services.AddTransient<IProjectRepository, ProjectRepository>();
             services.AddTransient<IProjectCategoryRepository, CategoryRepository>();
             services.AddTransient<EmailService>();
+            services.AddTransient<SearchService>();
             services.AddCors();
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
