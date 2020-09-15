@@ -4,14 +4,16 @@ using Anthill.API.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Anthill.API.Migrations
 {
     [DbContext(typeof(ApplicationDbContent))]
-    partial class ApplicationDbContentModelSnapshot : ModelSnapshot
+    [Migration("20200915100509_AddColumnLongDescription")]
+    partial class AddColumnLongDescription
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

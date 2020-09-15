@@ -43,7 +43,8 @@ namespace Anthill.API.Repository
                 proj.Name = project.Name;
                 proj.IsCompleted = project.IsCompleted;
                 proj.EndDate = project.EndDate;
-                proj.Description = project.Description;
+                proj.ShortDescription = project.ShortDescription;
+                proj.LongDescription = project.LongDescription;
                 proj.Category = proj.Category;
                 proj.CategoryId = proj.CategoryId;
             }
