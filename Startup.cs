@@ -88,6 +88,7 @@ namespace Anthill.API
 
             app.UseAuthorization();
             app.UseAuthentication();
+            ApplicationDbContent.CreateAdminAccount(app.ApplicationServices, this.Configuration).Wait();
 
             app.UseEndpoints(endpoints =>
             {
