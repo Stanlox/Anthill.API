@@ -11,12 +11,12 @@ namespace Anthill.API.Interfaces
         /// <summary>
         /// Get all projects
         /// </summary>
-        IEnumerable<Project> projects { get; }
+        IQueryable<Project> projects { get; }
 
         /// <summary>
         /// Get all completed projects
         /// </summary>
-        IEnumerable<Project> completed { get; }
+        IQueryable<Project> completed { get; }
 
         /// <summary>
         /// Save a project with a change.

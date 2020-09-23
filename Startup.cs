@@ -44,8 +44,9 @@ namespace Anthill.API
             services.AddControllers();
             services.AddTransient<IProjectRepository, ProjectRepository>();
             services.AddTransient<IProjectCategoryRepository, CategoryRepository>();
+            services.AddTransient<ManagerRepository>();
+            services.AddTransient<ISearchProject, SearchService>();
             services.AddTransient<EmailService>();
-            services.AddTransient<SearchService>();
             services.AddCors();
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
@@ -60,6 +61,10 @@ namespace Anthill.API
 
                     config.Filters.Add(new ExceptionFilter());
                 });
+
+            services.AddControllersWithViews()
+                .AddNewtonsoftJson(options =>
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
             services.AddIdentity<User, IdentityRole>(options =>
             {
@@ -86,8 +91,8 @@ namespace Anthill.API
 
             app.UseRouting();
 
-            app.UseAuthorization();
             app.UseAuthentication();
+            app.UseAuthorization();
             ApplicationDbContent.CreateAdminAccount(app.ApplicationServices, this.Configuration).Wait();
 
             app.UseEndpoints(endpoints =>

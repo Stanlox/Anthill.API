@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Anthill.API.Interfaces;
 using Anthill.API.Models;
+using Anthill.API.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -16,10 +17,10 @@ namespace Anthill.API.Controllers
     [ApiController]
     public class AdminController : ControllerBase
     {
-        private readonly IProjectRepository project;
-        public AdminController(IProjectRepository project)
+        private readonly ManagerRepository manager;
+        public AdminController(ManagerRepository manager)
         {
-            this.project = project;
+            this.manager = manager;
         }
 
 
@@ -28,7 +29,7 @@ namespace Anthill.API.Controllers
         {
             if (ModelState.IsValid)
             {
-                this.project.SaveProjectAsync(project);
+                this.manager.Project.SaveProjectAsync(project);
                 return Ok();
             }
             else
@@ -41,7 +42,7 @@ namespace Anthill.API.Controllers
         [HttpDelete("DeleteProject/{id}")]
         public IActionResult DeleteProject(int id)
         {
-            var project = this.project.DeleteProjectAsync(id).Result;
+            var project = this.manager.Project.DeleteProjectAsync(id).Result;
             if(project != null)
             {
                 return Ok();

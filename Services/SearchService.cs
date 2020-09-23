@@ -7,16 +7,11 @@ using System.Threading.Tasks;
 
 namespace Anthill.API.Services
 {
-    public class SearchService
+    public class SearchService : ISearchProject
     {
-        private readonly IProjectRepository project;
         private List<string> listOfProjectsName = new List<string>();
-        private IEnumerable<Project> listOfProjects = new List<Project>();
-
-        public SearchService(IProjectRepository project, IEnumerable<Project> listOfProjects)
+        public SearchService(IProjectRepository project)
         {
-            this.project = project;
-            this.listOfProjects = listOfProjects;
             foreach (var proj in project.projects)
             {
                 listOfProjectsName.Add(proj.Name);

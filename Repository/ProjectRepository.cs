@@ -18,7 +18,7 @@ namespace Anthill.API.Repository
             this.dbContent = dbContent;
         }
 
-        public IEnumerable<Project> projects
+        public IQueryable<Project> projects
         {
             get
             {
@@ -26,7 +26,7 @@ namespace Anthill.API.Repository
             }
         }
 
-        public IEnumerable<Project> completed
+        public IQueryable<Project> completed
         {
             get
             {

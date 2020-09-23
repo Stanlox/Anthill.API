@@ -8,6 +8,6 @@ namespace Anthill.API.Interfaces
 {
     public interface IProjectCategoryRepository
     {
-        IEnumerable<CategoryProjects> allСategories { get; }
+        IQueryable<CategoryProjects> allСategories { get; }
     }
 }

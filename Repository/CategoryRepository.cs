@@ -16,7 +16,7 @@ namespace Anthill.API.Repository
             this.dbContent = dbContent;
         }
 
-        public IEnumerable<CategoryProjects> allСategories
+        public IQueryable<CategoryProjects> allСategories
         {
             get
             {

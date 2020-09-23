@@ -16,18 +16,17 @@ namespace Anthill.API.Controllers
     public class SearchController : ControllerBase
     {
         private readonly IProjectRepository project;
-        private IEnumerable<Project> projectsByCategoria = new List<Project>();
-        private IEnumerable<Project> listOfProjects = new List<Project>();
-        private IEnumerable<Project> foundProjects = new List<Project>();
-        private SearchService service;
+        private readonly ISearchProject search;
+        private IEnumerable<Project> projectsByCategoria;
+        private IEnumerable<Project> foundProjects;
 
-        public SearchController(IProjectRepository project, SearchService service)
+        public SearchController(IProjectRepository project, ISearchProject search)
         {
-            this.project = project;
-            this.listOfProjects = project.projects;
-            this.service = new SearchService(project, listOfProjects);         
+            this.search = search;
+            this.project = project; 
         }
 
+        [HttpGet("[action]/{nameProject}")]
         public IActionResult Search(string nameProject)
         {
             if (string.IsNullOrEmpty(nameProject))
@@ -36,7 +35,7 @@ namespace Anthill.API.Controllers
                 return Ok(projectsByCategoria);
             }
 
-            var mostSimilarProjectsName = this.service.GetMostSimilarProjectsName(nameProject);
+            var mostSimilarProjectsName = this.search.GetMostSimilarProjectsName(nameProject);
 
             if(!mostSimilarProjectsName.Any())
             {
@@ -45,15 +44,13 @@ namespace Anthill.API.Controllers
             }
 
             else
-            {
-                
+            {               
                 foreach (var foundProjectName in mostSimilarProjectsName)
                 {
-                    foundProjects = listOfProjects.Where(x => x.Name == foundProjectName);
+                    foundProjects = project.projects.Where(x => x.Name == foundProjectName);
                 }
 
-                return Ok(foundProjects);
-                
+                return Ok(foundProjects);               
             }
         }      
     }
