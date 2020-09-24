@@ -5,9 +5,11 @@ using System.Threading.Tasks;
 using Anthill.API.DTO;
 using Anthill.API.Filters;
 using Anthill.API.Interfaces;
+using Anthill.API.Mapping;
 using Anthill.API.Models;
 using Anthill.API.Repository;
 using Anthill.API.Services;
+using AutoMapper;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -55,16 +57,24 @@ namespace Anthill.API
                     options.LoginPath = new Microsoft.AspNetCore.Http.PathString("/Account/Login");
                 });
 
-            services.AddControllers(
-                config =>
-                {
+            //services.AddControllers(
+            //    config =>
+            //    {
 
-                    config.Filters.Add(new ExceptionFilter());
-                });
+            //        config.Filters.Add(new ExceptionFilter());
+            //    });
 
             services.AddControllersWithViews()
                 .AddNewtonsoftJson(options =>
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+
+            var mapperConfig = new MapperConfiguration(x =>
+            {
+                x.AddProfile(new MappingProfile());
+            });
+
+            IMapper mapper = mapperConfig.CreateMapper();
+            services.AddSingleton(mapper);
 
             services.AddIdentity<User, IdentityRole>(options =>
             {

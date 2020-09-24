@@ -26,6 +26,14 @@ namespace Anthill.API.Interfaces
 
 
         /// <summary>
+        /// Get all projects by category
+        /// </summary>
+        /// <param name="nameCategory"></param>
+        /// <returns></returns>
+        IQueryable<Project> projectByCategory(string nameCategory);
+
+
+        /// <summary>
         /// Delete project by id.
         /// </summary>
         /// <param name="id">Project id.</param>

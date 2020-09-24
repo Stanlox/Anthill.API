@@ -34,6 +34,11 @@ namespace Anthill.API.Repository
             }
         }
 
+        public IQueryable<Project> projectByCategory(string nameCategory)
+        {
+            return dbContent.Projects.Where(x => x.Category.CategoryName == nameCategory).Include(x => x.Category);
+        }
+
         public async void SaveProjectAsync(Project project)
         {
             Project proj = await dbContent.Projects.FindAsync(project.Id); 

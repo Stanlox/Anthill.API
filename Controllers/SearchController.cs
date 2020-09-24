@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
+using Anthill.API.DTO;
 using Anthill.API.Interfaces;
 using Anthill.API.Models;
 using Anthill.API.Services;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,15 +17,18 @@ namespace Anthill.API.Controllers
     [ApiController]
     public class SearchController : ControllerBase
     {
-        private readonly IProjectRepository project;
+        private readonly IProjectRepository projectRepository;
         private readonly ISearchProject search;
+        private readonly IMapper mapper;
+        private readonly Project project = new Project();
         private IEnumerable<Project> projectsByCategoria;
         private IEnumerable<Project> foundProjects;
 
-        public SearchController(IProjectRepository project, ISearchProject search)
+        public SearchController(IProjectRepository projectRepository, ISearchProject search, IMapper mapper)
         {
+            this.mapper = mapper;
             this.search = search;
-            this.project = project; 
+            this.projectRepository = projectRepository; 
         }
 
         [HttpGet("[action]/{nameProject}")]
@@ -31,7 +36,7 @@ namespace Anthill.API.Controllers
         {
             if (string.IsNullOrEmpty(nameProject))
             {
-                projectsByCategoria = project.projects;
+                projectsByCategoria = projectRepository.projects;
                 return Ok(projectsByCategoria);
             }
 
@@ -39,7 +44,7 @@ namespace Anthill.API.Controllers
 
             if(!mostSimilarProjectsName.Any())
             {
-                projectsByCategoria = project.projects;
+                projectsByCategoria = projectRepository.projects;
                 return Ok(projectsByCategoria);
             }
 
@@ -47,11 +52,28 @@ namespace Anthill.API.Controllers
             {               
                 foreach (var foundProjectName in mostSimilarProjectsName)
                 {
-                    foundProjects = project.projects.Where(x => x.Name == foundProjectName);
+                    foundProjects = projectRepository.projects.Where(x => x.Name == foundProjectName);
                 }
 
                 return Ok(foundProjects);               
             }
-        }      
+        }
+        
+        [HttpGet("[action]/{nameCategory}")]
+        public IActionResult Category(string nameCategory)
+        {
+            if (string.IsNullOrEmpty(nameCategory))
+            {
+                projectsByCategoria = projectRepository.projects;
+            }
+
+            else
+            {
+                projectsByCategoria = projectRepository.projectByCategory(nameCategory);              
+            }
+
+            var model = mapper.Map<ProjectsByCategoryDTO[]>(projectsByCategoria);
+            return Ok(model);
+        }
     }
 }
