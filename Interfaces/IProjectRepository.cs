@@ -16,7 +16,7 @@ namespace Anthill.API.Interfaces
         /// <summary>
         /// Get all completed projects
         /// </summary>
-        IQueryable<Project> completed { get; }
+        IQueryable<Project> getCompletedProjects { get; }
 
         /// <summary>
         /// Save a project with a change.
@@ -26,12 +26,22 @@ namespace Anthill.API.Interfaces
 
 
         /// <summary>
-        /// Get all projects by category
+        /// Get all projects by category.
         /// </summary>
         /// <param name="nameCategory"></param>
         /// <returns></returns>
-        IQueryable<Project> projectByCategory(string nameCategory);
+        IQueryable<Project> ProjectByCategory(string nameCategory);
 
+        /// <summary>
+        /// Get all projects that are coming to an end soon.
+        /// </summary>
+        IQueryable<Project> getTerminatingProjects { get; }
+
+
+        /// <summary>
+        /// Get new projects.
+        /// </summary>
+        IQueryable<Project> getNewProjects { get; }
 
         /// <summary>
         /// Delete project by id.

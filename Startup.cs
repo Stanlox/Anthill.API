@@ -50,6 +50,7 @@ namespace Anthill.API
             services.AddTransient<ISearchProject, SearchService>();
             services.AddTransient<EmailService>();
             services.AddCors();
+            services.AddCors();
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
@@ -100,7 +101,7 @@ namespace Anthill.API
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
+            app.UseCors(builder => builder.AllowAnyOrigin());
             app.UseAuthentication();
             app.UseAuthorization();
             ApplicationDbContent.CreateAdminAccount(app.ApplicationServices, this.Configuration).Wait();

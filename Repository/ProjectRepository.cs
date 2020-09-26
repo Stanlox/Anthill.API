@@ -12,6 +12,7 @@ namespace Anthill.API.Repository
     public class ProjectRepository : IProjectRepository
     {
         private readonly ApplicationDbContent dbContent;
+        private DateTime terminatingDate = DateTime.Now.AddMonths(4);
 
         public ProjectRepository(ApplicationDbContent dbContent)
         {
@@ -26,15 +27,31 @@ namespace Anthill.API.Repository
             }
         }
 
-        public IQueryable<Project> completed
+        public IQueryable<Project> getCompletedProjects
         {
             get
             {
-                return dbContent.Projects.Where(x => x.IsCompleted).Include(x => x.Category);
+                return dbContent.Projects.Where(x => x.IsCompleted == true);
             }
         }
 
-        public IQueryable<Project> projectByCategory(string nameCategory)
+        public IQueryable<Project> getNewProjects
+        {
+            get
+            {
+                return dbContent.Projects.Where(x => x.EndDate > x.EndDate.AddYears(-1) && x.IsCompleted == false);
+            }
+        }
+
+        public IQueryable<Project> getTerminatingProjects
+        {
+            get
+            {
+                return dbContent.Projects.Where(x => x.EndDate <= terminatingDate && x.EndDate >= DateTime.Now);
+            }
+        }
+
+        public IQueryable<Project> ProjectByCategory(string nameCategory)
         {
             return dbContent.Projects.Where(x => x.Category.CategoryName == nameCategory).Include(x => x.Category);
         }

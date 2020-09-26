@@ -15,6 +15,8 @@ namespace Anthill.API.Mapping
         {
             CreateMap<Project, ProjectsByCategoryDTO>()
                 .ForMember(c => c.CategoryName, x => x.MapFrom(m => m.Category.CategoryName));
+
+            CreateMap<Project, CompletedProjectsDTO>();
         }
     }
 }
