@@ -79,10 +79,11 @@ namespace Anthill.API.Repository
             Project project = await dbContent.Projects.FindAsync(id);
             if(project != null)
             {
-                this.dbContent.Remove(project);
+                this.dbContent.Projects.Remove(project);
                 await dbContent.SaveChangesAsync();
             }
 
+            await dbContent.SaveChangesAsync();
             return project;
         }
 

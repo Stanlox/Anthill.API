@@ -174,7 +174,8 @@ namespace Anthill.API.Migrations
                     Name = table.Column<string>(nullable: true),
                     IsCompleted = table.Column<bool>(nullable: false),
                     EndDate = table.Column<DateTime>(nullable: false),
-                    Description = table.Column<string>(nullable: true),
+                    ShortDescription = table.Column<string>(nullable: true),
+                    LongDescription = table.Column<string>(nullable: true),
                     CategoryId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -194,8 +195,7 @@ namespace Anthill.API.Migrations
                 {
                     id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ProjectsId = table.Column<int>(nullable: true),
-                    ProjectIdInFavourites = table.Column<string>(nullable: true)
+                    ProjectsId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {

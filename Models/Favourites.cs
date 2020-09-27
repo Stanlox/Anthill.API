@@ -8,7 +8,7 @@ namespace Anthill.API.Models
     public class Favourites
     {
         public int id { get; set; }
+
         public Project Projects { get; set; }
-        public string ProjectIdInFavourites { get; set; }
     }
 }

@@ -46,6 +46,7 @@ namespace Anthill.API
             services.AddControllers();
             services.AddTransient<IProjectRepository, ProjectRepository>();
             services.AddTransient<IProjectCategoryRepository, CategoryRepository>();
+            services.AddTransient<IFavouriteRepository, FavouriresRepository>();
             services.AddTransient<ManagerRepository>();
             services.AddTransient<ISearchProject, SearchService>();
             services.AddTransient<EmailService>();

@@ -41,9 +41,6 @@ namespace Anthill.API.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("ProjectIdInFavourites")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int?>("ProjectsId")
                         .HasColumnType("int");
 

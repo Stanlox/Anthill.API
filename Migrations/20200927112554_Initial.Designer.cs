@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Anthill.API.Migrations
 {
     [DbContext(typeof(ApplicationDbContent))]
-    [Migration("20200915100509_AddColumnLongDescription")]
-    partial class AddColumnLongDescription
+    [Migration("20200927112554_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -42,9 +42,6 @@ namespace Anthill.API.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("ProjectIdInFavourites")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("ProjectsId")
                         .HasColumnType("int");
