@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Policy;
-using System.Threading.Tasks;
-using Anthill.API.Models;
-using Anthill.API.Repository;
+﻿using Anthill.Infastructure.Interfaces;
+using Anthill.Infastructure.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,34 +7,34 @@ namespace Anthill.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class FavouriteController : ControllerBase
+    public class FavouriteController : ControllerBase 
     {
-        private readonly ManagerRepository managerRepository;
 
-        public FavouriteController(ManagerRepository managerRepository)
+        private IUnitOfWork unitOfWork;
+        public FavouriteController(IUnitOfWork unitOfWork)
         {
-            this.managerRepository = managerRepository;
+            this.unitOfWork = unitOfWork;
         }
 
 
         [HttpPost("[action]")]
         public IActionResult Add([FromBody] Project project)
         {
-            this.managerRepository.Favourites.AddProjectToFavouritesAsync(project);
+            this.unitOfWork.Favourites.AddProjectToFavouritesAsync(project);
             return Ok();
         }
 
         [HttpDelete("[action]")]
-        public IActionResult Delete([FromQuery]int id)
+        public IActionResult Delete([FromQuery] int id)
         {
-            this.managerRepository.Favourites.DeleteProjectFromFavouritesAsync(id);
+            this.unitOfWork.Favourites.DeleteProjectFromFavouritesAsync(id);
             return Ok();
         }
 
         [HttpGet("[action]")]
         public IActionResult Get()
         {
-            this.managerRepository.Favourites.GetProjectFromFavourites();
+            this.unitOfWork.Favourites.GetProjectFromFavourites();
             return Ok();
         }
     }

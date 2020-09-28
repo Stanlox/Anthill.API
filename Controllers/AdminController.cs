@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Anthill.API.Interfaces;
-using Anthill.API.Models;
-using Anthill.API.Repository;
+﻿using Anthill.Infastructure.Interfaces;
+using Anthill.Infastructure.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -17,10 +12,10 @@ namespace Anthill.API.Controllers
     [ApiController]
     public class AdminController : ControllerBase
     {
-        private readonly ManagerRepository manager;
-        public AdminController(ManagerRepository manager)
+        private readonly IUnitOfWork unitOfWork;
+        public AdminController(IUnitOfWork unitOfWork)
         {
-            this.manager = manager;
+            this.unitOfWork = unitOfWork;
         }
 
 
@@ -29,7 +24,7 @@ namespace Anthill.API.Controllers
         {
             if (ModelState.IsValid)
             {
-                this.manager.Project.SaveProjectAsync(project);
+                this.unitOfWork.Projects.SaveProjectAsync(project);
                 return Ok();
             }
             else
@@ -42,8 +37,8 @@ namespace Anthill.API.Controllers
         [HttpDelete("DeleteProject/{id}")]
         public IActionResult DeleteProject(int id)
         {
-            var project = this.manager.Project.DeleteProjectAsync(id).Result;
-            if(project != null)
+            var project = this.unitOfWork.Projects.DeleteProjectAsync(id).Result;
+            if (project != null)
             {
                 return Ok();
             }

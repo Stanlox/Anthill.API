@@ -4,15 +4,15 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using System.Web;
-using Anthill.API.DTO;
-using Anthill.API.Interfaces;
-using Anthill.API.Models;
-using Anthill.API.Repository;
+using Anthill.Infastructure.DTO;
 using Anthill.API.Services;
+using Anthill.Infastructure.Interfaces;
+using Anthill.Infastructure.Models;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
+using Anthill.Infastructure.Repository;
 
 namespace Anthill.API.Controllers
 {
@@ -20,39 +20,41 @@ namespace Anthill.API.Controllers
     [ApiController]
     public class SearchController : ControllerBase
     {
-        private readonly ManagerRepository managerRepository;
         private readonly IMapper mapper;
+        private ServiceRepository service;
         private IEnumerable<Project> projectsByCategoria;
         private IEnumerable<Project> foundProjects;
+        private IUnitOfWork unitOfWork;
 
-        public SearchController(ManagerRepository managerRepository, IMapper mapper)
+        public SearchController(IMapper mapper, IUnitOfWork unitOfWork, ServiceRepository service )
         {
+            this.service = service;
+            this.unitOfWork = unitOfWork;
             this.mapper = mapper;
-            this.managerRepository = managerRepository;
         }
 
         [HttpGet("[action]")]
-        public IActionResult Projects([FromQuery]string nameProject)
+        public IActionResult Projects([FromQuery] string nameProject)
         {
             if (string.IsNullOrEmpty(nameProject))
             {
-                projectsByCategoria = this.managerRepository.Project.projects;
+                projectsByCategoria = this.unitOfWork.Projects.projects;
                 return Ok(mapper.Map<ProjectsByCategoryDTO[]>(projectsByCategoria));
             }
 
-            var mostSimilarProjectsName = this.managerRepository.Search.GetMostSimilarProjectsName(nameProject);
+            var mostSimilarProjectsName = this.service.Search.GetMostSimilarProjectsName(nameProject);
 
-            if(!mostSimilarProjectsName.Any())
+            if (!mostSimilarProjectsName.Any())
             {
-                projectsByCategoria = this.managerRepository.Project.projects;
+                projectsByCategoria = this.unitOfWork.Projects.projects;
                 return Ok(mapper.Map<ProjectsByCategoryDTO[]>(projectsByCategoria));
             }
 
             else
-            {               
+            {
                 foreach (var foundProjectName in mostSimilarProjectsName)
                 {
-                    foundProjects = this.managerRepository.Project.projects.Where(x => x.Name == foundProjectName);
+                    foundProjects = this.unitOfWork.Projects.projects.Where(x => x.Name == foundProjectName);
                 }
 
                 return Ok(mapper.Map<ProjectsByCategoryDTO[]>(foundProjects));
@@ -62,38 +64,38 @@ namespace Anthill.API.Controllers
         [HttpGet("[action]")]
         public IActionResult Completed()
         {
-            return Ok(mapper.Map<CompletedProjectsDTO[]>(this.managerRepository.Project.getCompletedProjects));
+            return Ok(mapper.Map<CompletedProjectsDTO[]>(this.unitOfWork.Projects.getCompletedProjects));
         }
 
         [HttpGet("[action]")]
         public IActionResult New()
         {
-            return Ok(mapper.Map<ProjectsByCategoryDTO[]>(this.managerRepository.Project.getNewProjects));
+            return Ok(mapper.Map<ProjectsByCategoryDTO[]>(this.unitOfWork.Projects.getNewProjects));
         }
 
         [HttpGet("[action]")]
         public IActionResult Terminating()
         {
-            projectsByCategoria = this.managerRepository.Project.getTerminatingProjects;
+            projectsByCategoria = this.unitOfWork.Projects.getTerminatingProjects;
             var model = mapper.Map<ProjectsByCategoryDTO[]>(this.projectsByCategoria);
-            return Ok(model); 
+            return Ok(model);
         }
 
         [HttpGet("[action]")]
-        public IActionResult Category([FromQuery]string nameCategory)
+        public IActionResult Category([FromQuery] string nameCategory)
         {
             if (string.IsNullOrEmpty(nameCategory))
             {
-                 projectsByCategoria = this.managerRepository.Project.projects;
+                projectsByCategoria = this.unitOfWork.Projects.projects;
             }
 
             else
             {
-                projectsByCategoria = this.managerRepository.Project.ProjectByCategory(nameCategory);
+                projectsByCategoria = this.unitOfWork.Projects.ProjectByCategory(nameCategory);
 
                 if (!projectsByCategoria.Any())
                 {
-                    projectsByCategoria = this.managerRepository.Project.projects;
+                    projectsByCategoria = this.unitOfWork.Projects.projects;
                 }
             }
 

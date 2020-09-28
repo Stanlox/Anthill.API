@@ -2,13 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Anthill.API.DTO;
 using Anthill.API.Filters;
-using Anthill.API.Interfaces;
 using Anthill.API.Mapping;
 using Anthill.API.Models;
-using Anthill.API.Repository;
 using Anthill.API.Services;
+using Anthill.Infastructure.Data;
+using Anthill.Infastructure.Interfaces;
+using Anthill.Infastructure.Models;
+using Anthill.Infastructure.Repository;
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
@@ -42,41 +43,27 @@ namespace Anthill.API
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContent>(options => options.UseSqlServer(this.ConfigurationRoot.GetConnectionString("DefaultConnection")));
-            services.AddControllers();
-            services.AddTransient<IProjectRepository, ProjectRepository>();
-            services.AddTransient<IProjectCategoryRepository, CategoryRepository>();
-            services.AddTransient<IFavouriteRepository, FavouriresRepository>();
-            services.AddTransient<ManagerRepository>();
-            services.AddTransient<ISearchProject, SearchService>();
+            services.AddInfastructure(Configuration);
             services.AddTransient<EmailService>();
             services.AddCors();
-            services.AddCors();
-
+            services.AddControllers();
+            services.AddTransient<IUnitOfWork, EFUnitOfWork>();
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
                 {
                     options.LoginPath = new Microsoft.AspNetCore.Http.PathString("/Account/Login");
                 });
 
-            //services.AddControllers(
-            //    config =>
-            //    {
+            services.AddControllers(
+                config =>
+                {
 
-            //        config.Filters.Add(new ExceptionFilter());
-            //    });
+                    config.Filters.Add(new ExceptionFilter());
+                });
 
             services.AddControllersWithViews()
                 .AddNewtonsoftJson(options =>
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
-
-            var mapperConfig = new MapperConfiguration(x =>
-            {
-                x.AddProfile(new MappingProfile());
-            });
-
-            IMapper mapper = mapperConfig.CreateMapper();
-            services.AddSingleton(mapper);
 
             services.AddIdentity<User, IdentityRole>(options =>
             {
@@ -87,8 +74,8 @@ namespace Anthill.API
                 options.Password.RequireLowercase = false;
                 options.Password.RequireDigit = false;
             })
-                .AddEntityFrameworkStores<ApplicationDbContent>()
-                .AddDefaultTokenProviders();
+               .AddEntityFrameworkStores<ApplicationDbContext>()
+               .AddDefaultTokenProviders();
         }
 
 
@@ -105,7 +92,6 @@ namespace Anthill.API
             app.UseCors(builder => builder.AllowAnyOrigin());
             app.UseAuthentication();
             app.UseAuthorization();
-            ApplicationDbContent.CreateAdminAccount(app.ApplicationServices, this.Configuration).Wait();
 
             app.UseEndpoints(endpoints =>
             {
@@ -114,11 +100,12 @@ namespace Anthill.API
                      pattern: "{controller}/{action=Index}/{id?}");
             });
 
+            ApplicationDbContext.CreateAdminAccount(app.ApplicationServices, this.Configuration).Wait();
 
             using (var serviceScope = app.ApplicationServices.CreateScope())
             {
-                ApplicationDbContent content = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContent>();
-                ProjectsDto.Initial(content);
+                ApplicationDbContext content = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+                AnthillDbInitialiser.Initial(content);
             }
         }
     }

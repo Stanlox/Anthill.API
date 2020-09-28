@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Anthill.API.Models;
 using Anthill.API.Services;
 using Anthill.API.ViewModels;
+using Anthill.Infastructure.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
@@ -36,7 +37,7 @@ namespace Anthill.API.Controllers
         }
 
         [HttpPost("[action]")]
-        
+
         public async Task<IActionResult> Login([FromBody] LoginViewModel details)
         {
             if (ModelState.IsValid)
@@ -82,18 +83,18 @@ namespace Anthill.API.Controllers
 
                 IdentityResult result = await this.userManager.CreateAsync(user, model.Password);
 
-                if(!result.Succeeded)
+                if (!result.Succeeded)
                 {
-                    foreach (var error  in result.Errors)
+                    foreach (var error in result.Errors)
                     {
                         ModelState.AddModelError(string.Empty, error.Description);
                         return BadRequest(ModelState);
                     }
                 }
 
-                 await GenerateEmailRegisterConfirmation(user, model);
-                 return Ok();
-        
+                await GenerateEmailRegisterConfirmation(user, model);
+                return Ok();
+
             }
             else
             {
@@ -116,7 +117,7 @@ namespace Anthill.API.Controllers
                 var user = await userManager.FindByEmailAsync(email);
                 if (user == null || !(await userManager.IsEmailConfirmedAsync(user)))
                 {
-                    //return StatusCode(403);
+                    return StatusCode(403);
                 }
 
                 var code = await userManager.GeneratePasswordResetTokenAsync(user);
@@ -148,9 +149,9 @@ namespace Anthill.API.Controllers
         private async Task Authenticate(string email)
         {
             var claims = new List<Claim>
-            {
-                new Claim(ClaimsIdentity.DefaultNameClaimType, email)
-            };
+                {
+                    new Claim(ClaimsIdentity.DefaultNameClaimType, email)
+                };
 
             ClaimsIdentity id = new ClaimsIdentity(claims, "ApplicationCookie", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(id));
